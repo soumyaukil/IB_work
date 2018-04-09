@@ -9,7 +9,8 @@ namespace Ib
 
 std::string ContractsFactory::toString(const ::Contract& contract) {
   return contract.secType + ":" + contract.currency + ":" +
-         contract.exchange + ":" + contract.localSymbol;
+         contract.exchange + ":" + contract.localSymbol + ":" +
+         contract.symbol;
 }
 
 ::Contract ContractsFactory::fromString(const std::string& contractStr) {
@@ -19,6 +20,7 @@ std::string ContractsFactory::toString(const ::Contract& contract) {
   getline(iStrStream, contract.currency, ':');
   getline(iStrStream, contract.exchange, ':');
   getline(iStrStream, contract.localSymbol, ':');
+  getline(iStrStream, contract.symbol, ':');
 
   return contract;
 }

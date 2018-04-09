@@ -13,10 +13,11 @@ namespace Db
   {
     public:
       Instrument() {}
-      Instrument(const std::string& name,     const std::string& secType,
-                 const std::string& exchange, const std::string& currency) : 
-                                            _name(name), _secType(secType),
-                                            _exchange(exchange), _currency(currency)
+      Instrument(const std::string& name,     const std::string& localSymbol_,
+                 const std::string& secType,  const std::string& exchange, 
+                 const std::string& currency) : _name(name), _localSymbol(localSymbol_) ,
+                                                _secType(secType), _exchange(exchange), 
+                                                _currency(currency)
                                             {}
 
       unsigned long id() const { return _id; }
@@ -24,6 +25,9 @@ namespace Db
 
       const std::string& name() const { return _name; }
       void setName(const std::string& name) { _name = name; }
+
+      const std::string& localSymbol() const { return _localSymbol; }
+      void setLocalSymbol(const std::string& localSymbol) { _localSymbol = localSymbol; }
 
       const std::string& secType() const { return _secType; }
       void setSecType(const std::string& secType) { _secType = secType; }
@@ -45,6 +49,9 @@ namespace Db
 
       #pragma db column("Name")
       std::string _name;
+
+      #pragma db column("LocalSymbol")
+      std::string _localSymbol;
 
       #pragma db column("SecType")
       std::string _secType;

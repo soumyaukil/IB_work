@@ -49,7 +49,8 @@ bool MarketDataHandler::subscribeImplementation(const std::string& symbol, int i
 
     ::Contract ibContract = ContractsFactory::fromString(symbol);
     std::cout << ibContract.secType << " " << ibContract.currency 
-              << " " << ibContract.exchange << " " << ibContract.localSymbol << std::endl;
+              << " " << ibContract.exchange << " " << ibContract.localSymbol 
+              << " " << ibContract.symbol << std::endl;
 
     _client->reqMktData(id, ibContract, "", false, TagValueListSPtr());
     std::lock_guard<std::mutex> guard(_mutex);
