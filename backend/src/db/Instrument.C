@@ -9,7 +9,8 @@ namespace Db
     std::string instrument = secType()  + ":" +
                              currency() + ":" +
                              exchange() + ":" +
-                             name();
+                             name()     + ":" +
+                             localSymbol();
     return instrument;
   }
 

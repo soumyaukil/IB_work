@@ -19,8 +19,8 @@ std::string ContractsFactory::toString(const ::Contract& contract) {
   getline(iStrStream, contract.secType, ':');
   getline(iStrStream, contract.currency, ':');
   getline(iStrStream, contract.exchange, ':');
-  getline(iStrStream, contract.localSymbol, ':');
   getline(iStrStream, contract.symbol, ':');
+  getline(iStrStream, contract.localSymbol, ':');
 
   return contract;
 }
