@@ -26,16 +26,16 @@ ConnectionHandler::~ConnectionHandler() {
 bool ConnectionHandler::connect(const std::string& host, const int port) {
   static int sClientId = 1;
 
-  std::cout << "Connecting to " << host << ":" << port;
+  std::cout << "Connecting to " << host << ":" << port << std::endl;
 
   // Each running connection to IB Gateway should have unique client id
   // Basically we will have just two ids for Market data connection and orders.
   bool status = _client->eConnect(host.c_str(), port, sClientId);
   if (!status) {
-    std::cerr << "Cannot connect to " << host << ":" << port;
+    std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
     return false;
   }
-  std::cout << "Connected to " << host << ":" << port;
+  std::cout << "Connected to " << host << ":" << port << std::endl;
 
   ++sClientId;
 
@@ -48,7 +48,7 @@ bool ConnectionHandler::connect(const std::string& host, const int port) {
 void ConnectionHandler::disconnect() const
 {
   _client->eDisconnect();
-  std::cout << "Disconnect";
+  std::cout << "Disconnect" << std::endl;
 }
 
 bool ConnectionHandler::isConnected() const
@@ -65,7 +65,7 @@ void ConnectionHandler::processMessages()
 
 void ConnectionHandler::error(const int id, const int errorCode,
                               const std::string errorStr) {
-  std::cerr << "Id: " << id << " Code: " << errorCode << " Msg: " << errorStr;
+  std::cerr << "Id: " << id << " Code: " << errorCode << " Msg: " << errorStr << std::endl;
 }
 
 }

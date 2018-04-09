@@ -6,6 +6,7 @@
 #include <db/Instrument_odb.H>
 #include <config/Configuration.H>
 #include <constant/ServerGlobals.H>
+#include <chrono>
 
 
 bool loadInstruments(Algo::DatabaseConnection &dbConnection_, std::string &error_);
@@ -63,6 +64,11 @@ int runServer()
   });
 
   ibMarketDataThread.detach();
+  while(Algo::gIsRunning)
+  {
+    //let main thread sleep here
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+  }
   return EXIT_SUCCESS;
 }
 

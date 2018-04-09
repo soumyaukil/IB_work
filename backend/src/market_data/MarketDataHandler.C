@@ -49,19 +49,19 @@ bool MarketDataHandler::subscribeImplementation(const std::string& symbol, int i
 
     ::Contract ibContract = ContractsFactory::fromString(symbol);
     std::cout << ibContract.secType << " " << ibContract.currency 
-              << " " << ibContract.exchange << " " << ibContract.localSymbol;
+              << " " << ibContract.exchange << " " << ibContract.localSymbol << std::endl;
 
     _client->reqMktData(id, ibContract, "", false, TagValueListSPtr());
     std::lock_guard<std::mutex> guard(_mutex);
     _tickerIdToContract[id] = symbol;
 
-    std::cout << "[IB MD] Subscribed to " << symbol << " tickerId " << id;
+    std::cout << "[IB MD] Subscribed to " << symbol << " tickerId " << id << std::endl;
 
     return true; 
   }
   else 
   {
-    std::cerr << "[IB MD] Not Subscribed to " << symbol << " since Feed connection is not yet ready.";
+    std::cerr << "[IB MD] Not Subscribed to " << symbol << " since Feed connection is not yet ready." << std::endl;
   }
 }
 
@@ -75,12 +75,12 @@ void MarketDataHandler::tickPrice(TickerId tickerId, TickType field,
         {
           if (price < 0) {
             std::cout << "[IB MD] Ticker " << symbol
-                      << " receiving negative ticker price " << price << " ignoring.";
+                      << " receiving negative ticker price " << price << " ignoring." << std::endl;
             break;
           }
           Db::Quote quote(tickerId, price, "BID");
           saveQuote(quote);
-          std::cout << "[IB MD] Ticker " << symbol << " BID price: " << price;
+          std::cout << "[IB MD] Ticker " << symbol << " BID price: " << price << std::endl;
           break;
         }
 
@@ -88,22 +88,22 @@ void MarketDataHandler::tickPrice(TickerId tickerId, TickType field,
         {
           if (price < 0) {
             std::cout << "[IB MD] Ticker " << symbol
-                      << " receiving negative ticker price " << price << " ignoring.";
+                      << " receiving negative ticker price " << price << " ignoring." << std::endl;
             break;
           }
           Db::Quote quote(tickerId, price, "ASK");
           saveQuote(quote);
-          std::cout << "[IB MD] Ticker " << symbol << " ASK price: " << price;
+          std::cout << "[IB MD] Ticker " << symbol << " ASK price: " << price << std::endl;
           break;
         }
 
       default:
         std::cout << "[IB MD] Ticker " << symbol
-                  << " skipping recieved ticker type " << field;
+                  << " skipping recieved ticker type " << field << std::endl;
     }
   }
   else {
-    std::cerr << "[IB MD] Ignoring prices since connection down.";
+    std::cerr << "[IB MD] Ignoring prices since connection down." << std::endl;
   }
 }
 

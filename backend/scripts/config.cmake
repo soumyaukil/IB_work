@@ -2,6 +2,8 @@
 set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_FLAGS "-std=c++0x")
 
+add_definitions(-DIB_PAPER_ACCOUNT)
+
 # Build type for cmake if it is release or debug.
 if(CMAKE_BUILD_TYPE)
     if(CMAKE_BUILD_TYPE STREQUAL Release OR CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo OR CMAKE_BUILD_TYPE STREQUAL MinSizeRel)

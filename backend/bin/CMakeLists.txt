@@ -8,6 +8,7 @@ target_link_libraries("${EXE_FILE_NAME}" ${ODB_LIB_NAME}
                                          ${LIBRARY_NAME}
                                          ${IB_API_LIB}
                                          ${Boost_LIBRARIES}
-                                         "/usr/local/lib/libodb-boost.so"
-                                         "/usr/local/lib/libodb-mysql.so"
-                                         "/usr/local/lib/libodb.so")
+                                         ${PLATFORM_SPECIFIC_LIBRARIES}
+                                         "/usr/lib64/libodb-boost.so"
+                                         "/usr/lib64/libodb-mysql.so"
+                                         "/usr/lib64/libodb.so")
