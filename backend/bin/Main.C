@@ -1,4 +1,5 @@
 #include <market_data/MarketDataHandler.H>
+#include <order_management/OrderHandler.H>
 #include <thread>
 #include <connection/DatabaseConnection.H>
 #include <instrument/InstrumentMap.H>
@@ -23,10 +24,11 @@ int runServer()
   config->loadConfig();
 
   Algo::Ib::MarketDataHandler ibMsgHandler;
+  Algo::Ib::OrderHandler orderHandler;
   std::string error;
   
   Algo::DatabaseConnection &db = Algo::DatabaseConnection::getInstance();
-  bool dbConnected = db.startConnection(
+  /*bool dbConnected = db.startConnection(
     config->getCentralDbUser(),
     config->getCentralDbPassword(),
     config->getCentralDbName(),
@@ -40,10 +42,13 @@ int runServer()
   if(!loadInstruments(db, error)) {
     std::cerr << "Failed to load instruments from db. Error=[" << error << "] Existing..." << std::endl;
     return EXIT_FAILURE;
-  }
+  }*/
 
-
-  bool connected = ibMsgHandler.connect(config->getIbGatewayHost(), config->getIbGatewayPort());
+  std::string path = "./FIXConfig.conf";
+  //orderHandler.setBuyAccount("U001011");
+  //orderHandler.setSellAccount("U001011");
+  orderHandler.start(path, false);
+  /*bool connected = ibMsgHandler.connect(config->getIbGatewayHost(), config->getIbGatewayPort());
 
   if (connected) {
     std::map<std::string, int>::iterator it;
@@ -63,11 +68,12 @@ int runServer()
      while(Algo::gIsRunning) { ibMsgHandler.processMessages(); }
   });
 
-  ibMarketDataThread.detach();
+  ibMarketDataThread.detach();*/
   while(Algo::gIsRunning)
   {
     //let main thread sleep here
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    std::cout << "Wake up" << std::endl;
   }
   return EXIT_SUCCESS;
 }

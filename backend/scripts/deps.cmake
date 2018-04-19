@@ -1,4 +1,5 @@
 SET(IB_API_ROOT "/home/local/ANT/soumukil/ib/IB_work/dependencies/IB/install/")
+SET(QUICKFIX_ROOT "/home/local/ANT/soumukil/ib/IB_work/dependencies/quickfix-install/")
 
 #### Interactive Brokers API library dependency ####
 include_directories(${IB_API_ROOT}/include)
@@ -39,7 +40,6 @@ add_dependencies(boost::filesystem boost)
 add_dependencies(boost::thread boost)
 add_dependencies(boost::algorithm boost)
 
-
 set(Boost_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/boostinstall/include)
 set(Boost_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/boostinstall/lib/libboost_date_time.a 
                     ${CMAKE_CURRENT_BINARY_DIR}/boostinstall/lib/libboost_thread.a 
@@ -58,7 +58,15 @@ include_directories(${Boost_INCLUDE_DIRS})
 #### System library dependency ####
 set(PLATFORM_SPECIFIC_LIBRARIES pthread)
 
-set(CMAKE_LIBRARY_PATH ${IB_API_LIB_PATH})
+#### QuickFix library dependency ####
+include_directories(${QUICKFIX_ROOT}/include)
+include_directories(${QUICKFIX_ROOT}/include/quickfix) # This is needed for shared lib
+set(QUICKFIX_LIB_PATH "${QUICKFIX_ROOT}/lib")
+
+
+set(CMAKE_LIBRARY_PATH ${IB_API_LIB_PATH} ${QUICKFIX_LIB_PATH})
+
+find_library(QUICKFIX_LIB quickfix ${QUICKFIX_LIB_PATH})
 
 find_library(IB_API_LIB ib_api)
 
