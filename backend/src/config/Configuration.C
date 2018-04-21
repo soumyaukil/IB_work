@@ -60,6 +60,14 @@ namespace Algo
     return _ibGatewayPort;
   }
 
+  std::string& Configuration::getAccountNumberBuy() {
+    return _accountNumberBuy;
+  }
+
+  std::string& Configuration::getAccountNumberSell() {
+    return _accountNumberSell;
+  }
+
   void Configuration::loadConfig()
   {
     try
@@ -86,6 +94,14 @@ namespace Algo
       ("COMMON.CentralDbName",
         bpo::value<std::string>(&_centralDbName)->default_value("AlgoEngine"),
         "Central DB Name")
+
+      ("COMMON.AccountNumberBuy",
+       bpo::value<std::string>(&_accountNumberBuy)->default_value("1000662639"),
+       "Account Number Buy")
+
+      ("COMMON.AccountNumberSell",
+       bpo::value<std::string>(&_accountNumberSell)->default_value("1000662639"),
+       "Account Number Sell")
       
       ("COMMON.IbApiGatewayHost",
         bpo::value<std::string>(&_ibGatewayHost)->default_value("127.0.0.1"),

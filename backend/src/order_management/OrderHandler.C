@@ -1,14 +1,16 @@
 #include <order_management/OrderHandler.H>
 #include <util/FixMessageReader.H>
 #include <quickfix/SessionSettings.h>
-#include <quickfix/fix44/Logout.h>
-#include <quickfix/fix44/Logon.h>
+#include <quickfix/fix42/Logout.h>
+#include <quickfix/fix42/Logon.h>
+#include <quickfix/fix42/NewOrderSingle.h>
+#include <util/UniqueIdGenerator.H>
 
 namespace Algo { namespace Ib 
 {
-  long OrderHandler::_clOrdId;
-  FIX::SessionID OrderHandler::_sessioId;
-  int OrderHandler::_enableDebugLog;
+  //long OrderHandler::_clOrdId;
+  //FIX::SessionID OrderHandler::_sessioId;
+  //int OrderHandler::_enableDebugLog;
 
   void OrderHandler::start(std::string &fixConfigFile, int enableDebugLog)
   {
@@ -42,6 +44,13 @@ namespace Algo { namespace Ib
   OrderHandler::OrderHandler()
   {
     _clOrdId = 1000;
+  }
+
+  std::string OrderHandler::getNextId()
+  {
+    ++_clOrdId;
+    std::string str = std::to_string((long long) _clOrdId);
+    return str;
   }
 
   void OrderHandler::onCreate(const FIX::SessionID &sessionID)
@@ -126,13 +135,13 @@ namespace Algo { namespace Ib
     }
   }
 
-  void OrderHandler::onMessage(const FIX44::Logout &message, const FIX::SessionID &sessionID)
+  void OrderHandler::onMessage(const FIX42::Logout &message, const FIX::SessionID &sessionID)
   {
     std::cout << "[FXCM OP] Logout received" << std::endl;
     _isConnected = false;
   }
 
-  void OrderHandler::onMessage(const FIX44::Logon &message,const FIX::SessionID &sessionID)
+  void OrderHandler::onMessage(const FIX42::Logon &message,const FIX::SessionID &sessionID)
   {
     if (_enableDebugLog) {
       FixMessageReader::deserialize("INBOUND [FXCM OP]", message.toString());
@@ -147,6 +156,44 @@ namespace Algo { namespace Ib
   void OrderHandler::setSessionInf(const FIX::SessionID &sessionId)
   {
     _sessioId = sessionId;
+  }
+
+  void OrderHandler::sendOrder(const std::string & symbol, int quantity, OrderMode orderMode)
+  {
+    std::string clOrderId = std::to_string(UniqueIdGenerator::getInstance().generateUniqueOrderId()) + "_" + getNextId();
+    FIX::Side side = FIX::Side_BUY;
+    std::string account = _accountBuy;
+
+    if (orderMode == OrderMode::SELL) {
+      side = FIX::Side_SELL;
+      account = _accountSell;
+    }
+
+    FIX42::NewOrderSingle order;
+    //setHeader(order, _sessioId);
+    order.setField(FIX::TransactTime(FIX::TransactTime()));
+    order.setField(FIX::Symbol(symbol));
+    order.setField(FIX::OrderQty(quantity));
+    order.setField(FIX::Side(side));
+    order.setField(FIX::OrdType(FIX::OrdType_MARKET));
+    order.setField(FIX::TimeInForce(FIX::TimeInForce_GOOD_TILL_CANCEL));
+    order.setField(FIX::Account(account));
+    order.setField(FIX::ClOrdID(clOrderId));
+    order.setField(FIX::Rule80A(FIX::Rule80A_AGENCY_SINGLE_ORDER));
+    order.setField(FIX::TimeInForce(FIX::TimeInForce_DAY));
+    order.setField(FIX::OpenClose(FIX::OpenClose_OPEN));
+    order.setField(FIX::ExDestination("SEHK"));
+    order.setField(FIX::SecurityType(FIX::SecurityType_OPTION));
+    order.setField(FIX::CustomerOrFirm(FIX::CustomerOrFirm_CUSTOMER));
+    order.setField(FIX::ClearingAccount(account));
+    order.setField(FIX::Currency("HKD"));
+
+    std::cout << "[IBFIX] NewOrder message: "  << order << std::endl;
+    //new ClOrdID("1234"),
+    //new Symbol("AAPL"),
+    //new Side(Side.BUY),
+    //new TransactTime(DateTime.Now),
+    //new OrdType(OrdType.MARKET));
   }
 }
 }

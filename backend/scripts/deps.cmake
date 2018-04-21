@@ -1,5 +1,4 @@
 SET(IB_API_ROOT "/home/local/ANT/soumukil/ib/IB_work/dependencies/IB/install/")
-SET(QUICKFIX_ROOT "/home/local/ANT/soumukil/ib/IB_work/dependencies/quickfix-install/")
 
 #### Interactive Brokers API library dependency ####
 include_directories(${IB_API_ROOT}/include)
@@ -17,6 +16,19 @@ ExternalProject_Add(
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND ""
 )
+
+
+ExternalProject_Add(quickfix
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/quickfix
+    URL "https://github.com/quickfix/quickfix/archive/v1.15.1.tar.gz"
+    UPDATE_COMMAND "./bootstrap"
+    #SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/quickfix"
+    CONFIGURE_COMMAND ./configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/quickfixinstall
+    BUILD_COMMAND make
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND make install
+)
+
 
 
 add_library(boost::date_time STATIC IMPORTED)
@@ -59,6 +71,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 set(PLATFORM_SPECIFIC_LIBRARIES pthread)
 
 #### QuickFix library dependency ####
+SET(QUICKFIX_ROOT "${CMAKE_CURRENT_BINARY_DIR}/quickfixinstall")
 include_directories(${QUICKFIX_ROOT}/include)
 include_directories(${QUICKFIX_ROOT}/include/quickfix) # This is needed for shared lib
 set(QUICKFIX_LIB_PATH "${QUICKFIX_ROOT}/lib")

@@ -7,6 +7,7 @@
 #include <quickfix/SessionID.h>
 #include <quickfix/ThreadedSocketInitiator.h>
 #include <quickfix/FileStore.h>
+#include <util/OrderMode.H>
 
 namespace Algo { namespace Ib
 {
@@ -26,11 +27,15 @@ namespace Algo { namespace Ib
       bool isConnected();
       void setStartClOrderId(long id);
       OrderHandler();
+      void sendOrder(const std::string & symbol, int quantity, OrderMode orderMode);
+      inline void setBuyAccount(std::string account) {_accountBuy = account;}
+      inline void setSellAccount(std::string account) { _accountBuy = account; }
 
-      void onMessage(const FIX44::Logout &message, const FIX::SessionID &sessionID);
-      void onMessage(const FIX44::Logon &message,const FIX::SessionID &sessionID);
+      void onMessage(const FIX42::Logout &message, const FIX::SessionID &sessionID);
+      void onMessage(const FIX42::Logon &message,const FIX::SessionID &sessionID);
 
     private:
+      std::string getNextId();
       void onCreate(const FIX::SessionID &sessionID);
       void onLogon(const FIX::SessionID &sessionID);
       void onLogout(const FIX::SessionID &sessionID);
@@ -71,10 +76,12 @@ namespace Algo { namespace Ib
       FIX::FileStoreFactory        *_storeFactory;
       FIX::ScreenLogFactory        *_logFactory;
 
-      static long                  _clOrdId;
-      static FIX::SessionID        _sessioId;
-      static int                   _enableDebugLog;
+      long                         _clOrdId;
+      FIX::SessionID               _sessioId;
+      int                          _enableDebugLog;
       bool                         _isConnected;
+      std::string                  _accountBuy;
+      std::string                  _accountSell;
   };
 }
 }

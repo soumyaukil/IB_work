@@ -19,6 +19,8 @@ namespace Algo
       const std::string& getCentralDbUser() const;
       const std::string& getCentralDbPassword() const;
       const std::string& getCentralDbName() const;
+      std::string& getAccountNumberBuy ();
+      std::string& getAccountNumberSell ();
 
       void loadConfig();
       void print();
@@ -27,6 +29,8 @@ namespace Algo
       std::string _ibGatewayHost;
       int         _ibGatewayPort;
 
+      std::string _accountNumberBuy;
+      std::string _accountNumberSell;
       std::string _centralDbAddress;
       int         _centralDbPort;
       std::string _centralDbUser;
